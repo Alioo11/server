@@ -1,4 +1,7 @@
 import mongoose from "mongoose";
+
+import { billTypes } from "../../interfaces/bill.interface";
+
 var Schema = mongoose.Schema;
 var bill = new Schema({
   date_from: {
@@ -22,7 +25,7 @@ var bill = new Schema({
     required: true,
   },
   type: {
-    type: String,
+    type: billTypes,
     required: true,
   },
   bill_id: {

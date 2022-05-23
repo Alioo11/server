@@ -7,7 +7,7 @@
     "build": "tsc",
     "start": " node dist/server.js",
     "typescript:watch": "tsc -w ",
-    "nodemon:watch": "nodemon dist/server.js",
+    "nodemon:watch": "nodemon dist/server.js -w",
     "dev": "concurrently --kill-others \"npm run typescript:watch\" \"npm run nodemon:watch\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

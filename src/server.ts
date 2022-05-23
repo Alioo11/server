@@ -1,8 +1,27 @@
-import express from "express";
+import mongoose from "mongoose";
+import http from "http";
+import { config } from "dotenv";
 
-const app = express();
+import app from "./app";
 
-app.listen(3000, () => {
-  console.log("app listenning on port 3000");
+config();
+const PORT = process.env.PORT || 3000;
+const mongo_url = process.env.MONGO_URL || "";
+
+//TODO change the mongo DB defaul options
+mongoose.connect(mongo_url);
+
+mongoose.connection.once("open", () => {
+  console.log("\x1b[36m", "mongodb connected successfuly");
 });
-``;
+
+mongoose.connection.on("error", (e) => {
+  console.log("\x1b[31m", "mongodb connection error");
+  console.error(e);
+});
+
+const server = http.createServer(app);
+
+server.listen(PORT, () => {
+  console.log(`server listening on port ${PORT}`);
+});
