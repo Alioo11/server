@@ -31,3 +31,13 @@ export const addMockData = async () => {
 export const getBills = async (paginationData: { skip: number; limit: number }) => {
   return await billMongoose.find({}).skip(paginationData.skip).limit(paginationData.limit);
 };
+
+export const getBillById = async (id: String) => {
+  try {
+    return await billMongoose.findById(id);
+  } catch (err) {
+    console.log("\x1b[31m", "mongodb connection error");
+    console.error(err);
+    return null;
+  }
+};
