@@ -18,10 +18,6 @@ const billSample = {
   discount: 4568,
 };
 
-export const addNewBill = async (bill: Bill) => {
-  return await billMongoose.create(bill);
-};
-
 export const addMockData = async () => {
   console.log("adding mock data ", billSample);
   const data = await addNewBill(billSample);
@@ -40,4 +36,8 @@ export const getBillById = async (id: String) => {
     console.error(err);
     return null;
   }
+};
+
+export const addNewBill = async (bill: Bill) => {
+  return await billMongoose.create(bill);
 };

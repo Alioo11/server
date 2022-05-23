@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import mongoose from "mongoose";
 
 import paginator from "../../utils/pagination";
-import { getBills, getBillById } from "../../db/models/bill/bill.model";
+import { getBills, getBillById, addNewBill } from "../../db/models/bill/bill.model";
 
 export const httpGetAllBills = async (req: Request, res: Response) => {
   const { page, limit } = req.query;
@@ -21,4 +21,21 @@ export const httpGetBillById = async (req: Request, res: Response) => {
   if (bill === null) return res.status(404).json({ error: "Bill not Found !" });
 
   res.status(200).json(bill);
+};
+
+export const httpAddNewBill = async (req: Request, res: Response) => {
+  const bill = req.body;
+
+  const dateFrom: any = new Date(bill.date_from);
+  const dateTo: any = new Date(bill.date_to);
+  const issueDate: any = new Date(bill.issue_date);
+  const deadLineDate: any = new Date(bill.dead_line_date);
+
+  if (isNaN(dateFrom) || isNaN(dateTo) || isNaN(issueDate) || isNaN(deadLineDate)) return res.status(400).json({ error: "invalid Date" });
+  const billType = req.body.type.trim();
+  if (billType !== "power" && billType !== "water" && billType !== "gas") return res.status(400).json({ error: "invalid bill type" });
+
+  const dbRes = await addNewBill({ ...bill, date_from: dateFrom, date_to: dateTo, issue_date: issueDate, dead_line_date: deadLineDate });
+  if (dbRes) return res.status(200).json(dbRes);
+  return res.status(400).json({ error: "something went wrong !" });
 };
