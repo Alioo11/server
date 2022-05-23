@@ -1,0 +1,11 @@
+{
+  "name": "admin_manager",
+  "version": "1.0.0",
+  "description": "a management application for appartments ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ali salehi",
+  "license": "ISC"
+}
