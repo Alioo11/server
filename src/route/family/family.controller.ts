@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { Request, Response } from "express";
 
 import paginator from "../../utils/pagination";
-import { AddNewFamily, getFamilies, getFamilyById } from "../../db/models/family/family.model";
+import { AddNewFamily, getFamilies, getFamilyById, updateFamily } from "../../db/models/family/family.model";
 
 export const httpGetFamilyById = async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -20,6 +20,32 @@ export const httpGetAllFamilies = async (req: Request, res: Response) => {
   const paginationData = paginator(page, limit);
   const familiesData = await getFamilies(paginationData);
   res.status(200).json(familiesData);
+};
+
+export const httpUpdateFamily = async (req: Request, res: Response) => {
+  const { _id, absent_days, ...rest } = req.body;
+  let absentDays = [];
+  if (absent_days && absent_days.length !== 0) {
+    const formatedDates = absent_days.map((absent_day: string) => {
+      return new Date(absent_day);
+    });
+
+    const haveInvalidDate = formatedDates.some((formatedItem: number) => {
+      return isNaN(formatedItem);
+    });
+
+    if (haveInvalidDate) return res.status(400).json({ error: "absent days contain invelid Date !" });
+    absentDays = formatedDates;
+  }
+
+  const isValidId = mongoose.Types.ObjectId.isValid(_id);
+  if (!isValidId) return res.status(400).json({ error: "Invalid Family ID !" });
+
+  const updateResult = await updateFamily(_id, { ...rest, absent_days: absentDays });
+
+  if (updateResult !== undefined) return res.status(500).json(updateResult);
+
+  res.status(200).json({ massage: "family successfuly updated !!" });
 };
 
 export const httpAddNewFamily = async (req: Request, res: Response) => {

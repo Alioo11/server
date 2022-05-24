@@ -18,3 +18,10 @@ export const getFamilyById = async (id: String) => {
 export const AddNewFamily = async (family: Family) => {
   return await familyMongoose.create(family);
 };
+
+export const updateFamily = async (_id: number, newFamily: Family) => {
+  familyMongoose.findByIdAndUpdate(_id, newFamily, { upsert: true }, (err, doc) => {
+    if (err) return err;
+    return doc;
+  });
+};
