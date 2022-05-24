@@ -4,6 +4,17 @@ import { Request, Response } from "express";
 import paginator from "../../utils/pagination";
 import { AddNewFamily, getFamilies, getFamilyById } from "../../db/models/family/family.model";
 
+export const httpGetFamilyById = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const isValidId = mongoose.Types.ObjectId.isValid(id);
+  if (!isValidId) return res.status(400).json({ error: "Invalid Family ID !" });
+
+  const family = await getFamilyById(id);
+  if (family === null) return res.status(404).json({ error: "family not Found !" });
+
+  res.status(200).json(family);
+};
+
 export const httpGetAllFamilies = async (req: Request, res: Response) => {
   const { page, limit } = req.query;
   const paginationData = paginator(page, limit);
