@@ -28,6 +28,11 @@ var family = new Schema({
     type: Number,
     required: true,
   },
+  // family: {
+  //   type: Schema.Types.ObjectId,
+  //   required: true,
+  //   ref: "house",
+  // },
 });
 
 export default mongoose.model("Family", family);

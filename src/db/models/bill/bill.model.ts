@@ -32,7 +32,7 @@ export const getBillById = async (id: String) => {
   try {
     return await billMongoose.findById(id);
   } catch (err) {
-    console.log("\x1b[31m", "mongodb connection error");
+    console.log("\x1b[31m", "MongoDb Error : something went wrong while finding Bill By Id");
     console.error(err);
     return null;
   }
