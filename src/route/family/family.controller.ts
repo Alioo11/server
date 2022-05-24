@@ -4,6 +4,13 @@ import { Request, Response } from "express";
 import paginator from "../../utils/pagination";
 import { AddNewFamily, getFamilies, getFamilyById } from "../../db/models/family/family.model";
 
+export const httpGetAllFamilies = async (req: Request, res: Response) => {
+  const { page, limit } = req.query;
+  const paginationData = paginator(page, limit);
+  const familiesData = await getFamilies(paginationData);
+  res.status(200).json(familiesData);
+};
+
 export const httpAddNewFamily = async (req: Request, res: Response) => {
   const family = req.body;
 
