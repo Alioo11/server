@@ -2,10 +2,6 @@ import mongoose from "mongoose";
 
 var Schema = mongoose.Schema;
 var family = new Schema({
-  unit_name: {
-    type: Number,
-    required: true,
-  },
   family_name: {
     type: String,
     required: true,
