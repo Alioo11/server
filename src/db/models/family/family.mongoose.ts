@@ -2,7 +2,11 @@ import mongoose from "mongoose";
 
 var Schema = mongoose.Schema;
 var family = new Schema({
-  name: {
+  unit_name: {
+    type: Number,
+    required: true,
+  },
+  family_name: {
     type: String,
     required: true,
   },
