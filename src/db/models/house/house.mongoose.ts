@@ -8,6 +8,10 @@ var house = new Schema({
     type: Boolean,
     required: true,
   },
+  unit_name: {
+    type: Number,
+    required: true,
+  },
   family: {
     type: Schema.Types.ObjectId,
     required: true,
