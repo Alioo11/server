@@ -12,11 +12,6 @@ var house = new Schema({
     type: Number,
     required: true,
   },
-  family: {
-    type: Schema.Types.ObjectId,
-    required: true,
-    ref: "family",
-  },
 });
 
 export default mongoose.model("House", house);

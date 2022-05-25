@@ -9,10 +9,10 @@ export const httpGetHouseById = async (req: Request, res: Response) => {
   const isValidId = mongoose.Types.ObjectId.isValid(id);
   if (!isValidId) return res.status(400).json({ error: "Invalid House ID !" });
 
-  const family = await getHouseById(id);
-  if (family === null) return res.status(404).json({ error: "House not Found !" });
+  const house = await getHouseById(id);
+  if (house === null) return res.status(404).json({ error: "House not Found !" });
 
-  res.status(200).json(family);
+  res.status(200).json(house);
 };
 
 export const httpGetAllHouses = async (req: Request, res: Response) => {
