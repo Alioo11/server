@@ -23,7 +23,11 @@ export const httpGetAllFamilies = async (req: Request, res: Response) => {
 };
 
 export const httpUpdateFamily = async (req: Request, res: Response) => {
-  const { _id, absent_days, ...rest } = req.body;
+  const { _id, house, absent_days, ...rest } = req.body;
+
+  const isValidHouse = mongoose.Types.ObjectId.isValid(house);
+  if (!isValidHouse) return res.status(400).json({ error: "Invalid House ID !" });
+
   let absentDays = [];
   if (absent_days && absent_days.length !== 0) {
     const formatedDates = absent_days.map((absent_day: string) => {
@@ -41,7 +45,7 @@ export const httpUpdateFamily = async (req: Request, res: Response) => {
   const isValidId = mongoose.Types.ObjectId.isValid(_id);
   if (!isValidId) return res.status(400).json({ error: "Invalid Family ID !" });
 
-  const updateResult = await updateFamily(_id, { ...rest, absent_days: absentDays });
+  const updateResult = await updateFamily(_id, { ...rest, house, absent_days: absentDays });
 
   if (updateResult !== undefined) return res.status(500).json(updateResult);
 
@@ -50,6 +54,9 @@ export const httpUpdateFamily = async (req: Request, res: Response) => {
 
 export const httpAddNewFamily = async (req: Request, res: Response) => {
   const family = req.body;
+
+  const isValidHouse = mongoose.Types.ObjectId.isValid(family.house);
+  if (!isValidHouse) return res.status(400).json({ error: "Invalid House ID !" });
 
   const dateFrom: any = new Date(family.date_from);
   const dateTo: any = family.date_to ? new Date(family.date_to) : null;

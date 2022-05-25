@@ -25,11 +25,18 @@ var family = new Schema({
     type: Number,
     required: true,
   },
-  // family: {
-  //   type: Schema.Types.ObjectId,
-  //   required: true,
-  //   ref: "house",
-  // },
+  house: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: "house",
+  },
+  payment: [
+    {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "payment",
+    },
+  ],
 });
 
 export default mongoose.model("Family", family);
