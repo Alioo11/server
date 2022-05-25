@@ -12,7 +12,8 @@ var family = new Schema({
   },
   date_to: {
     type: Date,
-    required: true,
+    required: false,
+    default: null,
   },
   absent_days: [
     {

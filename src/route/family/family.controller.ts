@@ -52,12 +52,12 @@ export const httpAddNewFamily = async (req: Request, res: Response) => {
   const family = req.body;
 
   const dateFrom: any = new Date(family.date_from);
-  const dateTo: any = new Date(family.date_to);
+  const dateTo: any = family.date_to ? new Date(family.date_to) : null;
 
-  if (!family.date_from || !family.date_to || !family.family_name || !family.members_count) {
+  if (!family.date_from || !family.family_name || !family.members_count) {
     return res.status(400).json({ error: "missing property !" });
   }
-  if (isNaN(dateFrom) || isNaN(dateTo)) return res.status(400).json({ error: "invalid Date !" });
+  if (isNaN(dateFrom)) return res.status(400).json({ error: "invalid Date !" });
   if (family.family_name.trim().length === 0) return res.json(400).json({ error: "family name must be provided !" });
 
   const DBRes = await AddNewFamily({ ...family, date_from: dateFrom, date_to: dateTo });
