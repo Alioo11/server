@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { Request, Response } from "express";
 
 import paginator from "../../utils/pagination";
-import { addNewPayment, getPaymentById, getPayments, updatePayment } from "../../db/models/payment/payment.model";
+import { addNewPayment, getPaymentById, getPayments, updatePayment, getFullPayment } from "../../db/models/payment/payment.model";
 
 export const httpGetAllPayments = async (req: Request, res: Response) => {
   const { page, limit } = req.query;
@@ -36,4 +36,8 @@ export const httpAddNewPayment = async (req: Request, res: Response) => {
   const DBRes = await addNewPayment({ ...rest, bill, amount_paid, family });
   if (DBRes) return res.status(200).json(DBRes);
   return res.status(400).json({ error: "someting went wrong when adding family !" });
+};
+
+export const httpGetFullPayment = async (req: Request, res: Response) => {
+  return res.status(200).json(await getFullPayment());
 };

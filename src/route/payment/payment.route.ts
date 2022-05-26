@@ -1,10 +1,12 @@
 import express from "express";
 
-import { httpAddNewPayment, httpGetAllPayments, httpGetPaymentById } from "./payment.controller";
+import { httpAddNewPayment, httpGetAllPayments, httpGetPaymentById, httpGetFullPayment } from "./payment.controller";
 
 const paymentRouter = express.Router();
 
 paymentRouter.get("/", httpGetAllPayments);
+
+paymentRouter.get("/fullData", httpGetFullPayment);
 
 paymentRouter.get("/:id", httpGetPaymentById);
 

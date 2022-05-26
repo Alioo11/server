@@ -43,7 +43,7 @@ export const calculatewater = async (bill: Bill) => {
       date_to: new Date(item.payable_date_to),
       family: item._id,
       bill: bill._id,
-      price: item.payFactor * payFraction,
+      amount_paid: item.payFactor * payFraction,
       is_paid: false,
     };
   });

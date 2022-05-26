@@ -5,6 +5,14 @@ var payment = new Schema({
     type: Number,
     required: true,
   },
+  date_from: {
+    type: Date,
+    required: true,
+  },
+  date_to: {
+    type: Date,
+    required: true,
+  },
   is_paid: {
     type: Boolean,
     required: true,

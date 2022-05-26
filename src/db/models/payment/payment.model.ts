@@ -1,6 +1,11 @@
 import { Payment } from "../../interfaces/payment.interface";
 import paymentMongoose from "./payment.mongoose";
 
+import { getFamilyById } from "../../models/family/family.model";
+import { getBillById } from "../bill/bill.model";
+
+import familyMongoose from "../family/family.mongoose";
+
 export const getPayments = async (paginationData: { skip: number; limit: number }) => {
   return await paymentMongoose.find({}).skip(paginationData.skip).limit(paginationData.limit);
 };
@@ -25,4 +30,18 @@ export const updatePayment = async (_id: number, newPayment: Payment) => {
     if (err) return err;
     return doc;
   });
+};
+
+export const getFullPayment = async () => {
+  let initialRes = await paymentMongoose.find({});
+  const finalData = [];
+  for (let i = 0; i < initialRes.length; i++) {
+    const fullFamily = await getFamilyById(initialRes[i].family);
+    const fullBill = await getBillById(initialRes[i].bill);
+    //initialRes[i].family = fullFamily;
+    finalData.push({ ...initialRes[i]._doc, family: fullFamily, bill: fullBill });
+  }
+  console.log(finalData);
+
+  return finalData;
 };

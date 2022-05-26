@@ -5,6 +5,9 @@ import { calculatewater } from "../../Functions/water/water";
 import paginator from "../../utils/pagination";
 import { getBills, getBillById, addNewBill } from "../../db/models/bill/bill.model";
 
+import { addNewPayment } from "../../db/models/payment/payment.model";
+import { Payment } from "../../db/interfaces/payment.interface";
+
 export const httpGetAllBills = async (req: Request, res: Response) => {
   const { page, limit } = req.query;
   const paginationData = paginator(page, limit);
@@ -16,11 +19,8 @@ export const httpGetBillById = async (req: Request, res: Response) => {
   const { id } = req.params;
   const isValidId = mongoose.Types.ObjectId.isValid(id);
   if (!isValidId) return res.status(400).json({ error: "Invalid bill ID !" });
-
   const bill = await getBillById(id);
-
   if (bill === null) return res.status(404).json({ error: "Bill not Found !" });
-
   res.status(200).json(bill);
 };
 
@@ -38,7 +38,11 @@ export const httpAddNewBill = async (req: Request, res: Response) => {
 
   const dbRes = await addNewBill({ ...bill, date_from: dateFrom, date_to: dateTo, issue_date: issueDate, dead_line_date: deadLineDate });
 
-  calculatewater(dbRes);
+  const paymentData = await calculatewater(dbRes);
+
+  paymentData.forEach(async (item: any) => {
+    await addNewPayment(item);
+  });
 
   if (dbRes) return res.status(200).json(dbRes);
   return res.status(400).json({ error: "something went wrong !" });
