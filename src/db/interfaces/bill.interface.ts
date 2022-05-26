@@ -13,7 +13,7 @@ export interface Bill {
   is_paid: boolean | false;
   type: billTypes;
   bill_id: String | "???";
-  main_price: Number;
+  main_price: number;
   tax: Number | 0;
   previus_debt_price: Number | 0;
   consumtion_amount: Number | 0;

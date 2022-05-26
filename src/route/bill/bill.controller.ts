@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 
+import { calculatewater } from "../../Functions/water/water";
 import paginator from "../../utils/pagination";
 import { getBills, getBillById, addNewBill } from "../../db/models/bill/bill.model";
 
@@ -36,6 +37,9 @@ export const httpAddNewBill = async (req: Request, res: Response) => {
   if (billType !== "power" && billType !== "water" && billType !== "gas") return res.status(400).json({ error: "invalid bill type" });
 
   const dbRes = await addNewBill({ ...bill, date_from: dateFrom, date_to: dateTo, issue_date: issueDate, dead_line_date: deadLineDate });
+
+  calculatewater(dbRes);
+
   if (dbRes) return res.status(200).json(dbRes);
   return res.status(400).json({ error: "something went wrong !" });
 };

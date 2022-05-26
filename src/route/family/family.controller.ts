@@ -26,7 +26,7 @@ export const httpUpdateFamily = async (req: Request, res: Response) => {
   const { _id, house, absent_days, ...rest } = req.body;
 
   const isValidHouse = mongoose.Types.ObjectId.isValid(house);
-  if (!isValidHouse) return res.status(400).json({ error: "Invalid House ID !" });
+  if (house && !isValidHouse) return res.status(400).json({ error: "Invalid House ID !" });
 
   let absentDays = [];
   if (absent_days && absent_days.length !== 0) {
