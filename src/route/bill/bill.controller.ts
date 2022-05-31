@@ -2,11 +2,12 @@ import { Request, Response } from "express";
 import mongoose from "mongoose";
 
 import { calculatewater } from "../../Functions/water/water";
+import { calculatePower } from "../../Functions/power/power";
+
 import paginator from "../../utils/pagination";
 import { getBills, getBillById, addNewBill } from "../../db/models/bill/bill.model";
 
 import { addNewPayment } from "../../db/models/payment/payment.model";
-import { Payment } from "../../db/interfaces/payment.interface";
 
 export const httpGetAllBills = async (req: Request, res: Response) => {
   const { page, limit } = req.query;
@@ -38,7 +39,25 @@ export const httpAddNewBill = async (req: Request, res: Response) => {
 
   const dbRes = await addNewBill({ ...bill, date_from: dateFrom, date_to: dateTo, issue_date: issueDate, dead_line_date: deadLineDate });
 
-  const paymentData = await calculatewater(dbRes);
+  let paymentData;
+
+  switch (billType) {
+    case "water": {
+      paymentData = await calculatewater(dbRes);
+      break;
+    }
+    case "gas": {
+      paymentData = await calculatewater(dbRes);
+      break;
+    }
+    case "power": {
+      paymentData = await calculatePower(dbRes);
+      break;
+    }
+    default: {
+      paymentData = await calculatewater(dbRes);
+    }
+  }
 
   paymentData.forEach(async (item: any) => {
     await addNewPayment(item);

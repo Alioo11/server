@@ -25,6 +25,12 @@ export const addNewPayment = async (payment: Payment) => {
   return await paymentMongoose.create(payment);
 };
 
+export const updateWithBill = async (payment: Payment) => {
+  console.log("updating payment with bill with");
+  console.log(payment);
+  return await paymentMongoose.findOneAndUpdate({ bill: payment.bill }, payment);
+};
+
 export const updatePayment = async (_id: number, newPayment: Payment) => {
   paymentMongoose.findByIdAndUpdate(_id, newPayment, { upsert: true }, (err, doc) => {
     if (err) return err;
