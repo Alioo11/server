@@ -4,6 +4,8 @@ import { config } from "dotenv";
 
 import app from "./app";
 
+console.log = function () {};
+
 config();
 const PORT = process.env.PORT || 3000;
 const mongo_url = process.env.MONGO_URL || "";

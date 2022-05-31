@@ -6,7 +6,7 @@ import { Family } from "../../db/interfaces/family.interface";
 
 import { diffDate, isDateInBetween, commonDate } from "../../utils/dateHelper";
 
-export const calculatePower = async (bill: Bill) => {
+export const calculateGas = async (bill: Bill) => {
   const { date_from, date_to } = bill;
 
   const families = await getFamilies({ skip: 0, limit: 1000 });
@@ -41,6 +41,10 @@ export const calculatePower = async (bill: Bill) => {
       is_paid: false,
     };
   });
+
+  //   const test = payment.map((item) => item.amount_paid);
+  //   console.log(test);
+  //   console.log(test.reduce((acc, cur) => acc + cur));
 
   return payment;
 };

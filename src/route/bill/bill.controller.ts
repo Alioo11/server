@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 
 import { calculatewater } from "../../Functions/water/water";
 import { calculatePower } from "../../Functions/power/power";
+import { calculateGas } from "../../Functions/gas/gas";
 
 import paginator from "../../utils/pagination";
 import { getBills, getBillById, addNewBill } from "../../db/models/bill/bill.model";
@@ -47,7 +48,7 @@ export const httpAddNewBill = async (req: Request, res: Response) => {
       break;
     }
     case "gas": {
-      paymentData = await calculatewater(dbRes);
+      paymentData = await calculateGas(dbRes);
       break;
     }
     case "power": {
