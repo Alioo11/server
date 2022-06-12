@@ -11,6 +11,8 @@ export const calculatewater = async (bill: Bill) => {
 
   const families = await getFamilies({ skip: 0, limit: 1000 });
 
+  console.log("families", families);
+
   const formatedFamily = families
     .map((family: any) => {
       const { start, end } = commonDate(date_from, date_to, family.date_from, family.date_to);
@@ -28,6 +30,8 @@ export const calculatewater = async (bill: Bill) => {
       };
     })
     .filter((item) => item.payableDates !== 0);
+
+  console.log("formated familes", formatedFamily);
 
   const mainFactor = formatedFamily
     .map((item) => item.members_count * item.payableDates)

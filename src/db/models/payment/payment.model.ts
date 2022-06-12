@@ -6,8 +6,12 @@ import { getBillById } from "../bill/bill.model";
 
 import familyMongoose from "../family/family.mongoose";
 
-export const getPayments = async (paginationData: { skip: number; limit: number }) => {
-  return await paymentMongoose.find({}).skip(paginationData.skip).limit(paginationData.limit);
+export const getPayments = async (paginationData: { skip: number; limit: number }, familyId: any) => {
+  if (familyId) {
+    return await paymentMongoose.find({ family: familyId }).skip(paginationData.skip).limit(paginationData.limit);
+  } else {
+    return await paymentMongoose.find({}).skip(paginationData.skip).limit(paginationData.limit);
+  }
 };
 
 export const getPaymentById = async (id: String) => {
@@ -19,15 +23,17 @@ export const getPaymentById = async (id: String) => {
     return null;
   }
 };
+
 export const addNewPayment = async (payment: Payment) => {
-  console.log("adding a new payment with");
-  console.log(payment);
-  return await paymentMongoose.create(payment);
+  try {
+    return await paymentMongoose.create(payment);
+  } catch (err) {
+    console.log("\x1b[31m", "ERR: some error while adding payment");
+    console.log(err);
+  }
 };
 
 export const updateWithBill = async (payment: Payment) => {
-  console.log("updating payment with bill with");
-  console.log(payment);
   return await paymentMongoose.findOneAndUpdate({ bill: payment.bill }, payment);
 };
 
@@ -50,4 +56,9 @@ export const getFullPayment = async () => {
   console.log(finalData);
 
   return finalData;
+};
+
+export const changeBillStatus = async (paymentId: string, status: boolean = true) => {
+  const res = await paymentMongoose.findByIdAndUpdate(paymentId, { is_paid: status });
+  return res;
 };

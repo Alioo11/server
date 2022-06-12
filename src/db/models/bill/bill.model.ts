@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
 
 import billMongoose from "./bill.mongoose";
+
+import paymentMongoose from "../payment/payment.mongoose";
+
 import { billTypes, Bill } from "../../interfaces/bill.interface";
 
 const billSample = {
@@ -38,6 +41,19 @@ export const getBillById = async (id: String) => {
   }
 };
 
+export const changeBillPaymentStatus = async (id: String, status: boolean) => {
+  try {
+    return await billMongoose.findByIdAndUpdate(id, { is_paid: status });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const addNewBill = async (bill: Bill) => {
   return await billMongoose.create(bill);
+};
+
+export const deleteBill = async (id: String) => {
+  const relatedPayments = await paymentMongoose.deleteMany({ bill: id });
+  const billDeleteData = await billMongoose.findByIdAndDelete(id);
 };

@@ -6,7 +6,7 @@ import { calculatePower } from "../../Functions/power/power";
 import { calculateGas } from "../../Functions/gas/gas";
 
 import paginator from "../../utils/pagination";
-import { getBills, getBillById, addNewBill } from "../../db/models/bill/bill.model";
+import { getBills, getBillById, addNewBill, changeBillPaymentStatus, deleteBill } from "../../db/models/bill/bill.model";
 
 import { addNewPayment } from "../../db/models/payment/payment.model";
 
@@ -45,25 +45,49 @@ export const httpAddNewBill = async (req: Request, res: Response) => {
   switch (billType) {
     case "water": {
       paymentData = await calculatewater(dbRes);
+      console.log("ran water");
       break;
     }
     case "gas": {
       paymentData = await calculateGas(dbRes);
+      console.log("ran gas");
       break;
     }
     case "power": {
       paymentData = await calculatePower(dbRes);
+      console.log("ran power");
       break;
     }
     default: {
       paymentData = await calculatewater(dbRes);
+      console.log("ran default");
     }
   }
 
+  console.log(paymentData);
   paymentData.forEach(async (item: any) => {
     await addNewPayment(item);
   });
 
   if (dbRes) return res.status(200).json(dbRes);
   return res.status(400).json({ error: "something went wrong !" });
+};
+
+export const httpUpdateBill = async (req: Request, res: Response) => {
+  const { _id, is_paid } = req.body;
+
+  if (!mongoose.isValidObjectId(_id)) return res.status(400).json({ error: "invalid object id" });
+
+  const dbRes = await changeBillPaymentStatus(_id, is_paid);
+
+  res.json(dbRes);
+};
+
+export const httpDeleteBill = async (req: Request, res: Response) => {
+  const { _id } = req.body;
+  if (!mongoose.isValidObjectId(_id)) return res.status(400).json({ error: "invalid object id" });
+
+  const dbRes = await deleteBill(_id);
+
+  return res.status(200).json({ massage: "bill and Data Successfully deleted" });
 };

@@ -2,6 +2,10 @@ import mongoose from "mongoose";
 import { Request, Response } from "express";
 
 import paginator from "../../utils/pagination";
+
+import { getHouseById } from "../../db/models/house/house.model";
+import { getPaymentById } from "../../db/models/payment/payment.model";
+
 import { AddNewFamily, getFamilies, getFamilyById, updateFamily } from "../../db/models/family/family.model";
 
 export const httpGetFamilyById = async (req: Request, res: Response) => {
@@ -12,14 +16,29 @@ export const httpGetFamilyById = async (req: Request, res: Response) => {
   const family = await getFamilyById(id);
   if (family === null) return res.status(404).json({ error: "family not Found !" });
 
-  res.status(200).json(family);
+  const { house, payment } = family;
+
+  const housedata = await getHouseById(house);
+  const paymentArray = [];
+  for (let i = 0; i < payment.length; i++) {
+    const paymentData = await getPaymentById(payment[i]);
+    paymentArray.push(paymentData._doc);
+  }
+
+  res.status(200).json({ ...family._doc, house: housedata, payment: paymentArray });
 };
 
 export const httpGetAllFamilies = async (req: Request, res: Response) => {
   const { page, limit } = req.query;
   const paginationData = paginator(page, limit);
-  const familiesData = await getFamilies(paginationData);
-  res.status(200).json(familiesData);
+  let familiesData = await getFamilies(paginationData);
+  const finalData = [];
+  for (let i = 0; i < familiesData.length; i++) {
+    const { house } = familiesData[i];
+    const houseData = await getHouseById(house);
+    finalData.push({ ...familiesData[i]._doc, house: houseData._doc });
+  }
+  res.status(200).json(finalData);
 };
 
 export const httpUpdateFamily = async (req: Request, res: Response) => {

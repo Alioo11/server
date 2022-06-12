@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/static/css/main.e9be2d27.css",
+    "main.js": "/static/js/main.a12732a7.js",
+    "static/js/787.08ac3ed4.chunk.js": "/static/js/787.08ac3ed4.chunk.js",
+    "static/media/Hekayat Font.ttf": "/static/media/Hekayat Font.206c420ec3ced86313db.ttf",
+    "static/media/Yekan.woff2": "/static/media/Yekan.884a6f4f7c97158a4a97.woff2",
+    "index.html": "/index.html",
+    "main.e9be2d27.css.map": "/static/css/main.e9be2d27.css.map",
+    "main.a12732a7.js.map": "/static/js/main.a12732a7.js.map",
+    "787.08ac3ed4.chunk.js.map": "/static/js/787.08ac3ed4.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e9be2d27.css",
+    "static/js/main.a12732a7.js"
+  ]
+}

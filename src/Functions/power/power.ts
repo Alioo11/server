@@ -29,7 +29,7 @@ export const calculatePower = async (bill: Bill) => {
     })
     .filter((item) => item.payableDates !== 0);
 
-  const mainFactor = Math.floor(bill.main_price / formatedFamily.map((item) => item.payableDates).reduce((acc, current) => acc + current));
+  const mainFactor = Math.ceil(bill.main_price / formatedFamily.map((item) => item.payableDates).reduce((acc, current) => acc + current));
 
   const payment = formatedFamily.map((item) => {
     return {

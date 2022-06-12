@@ -2,12 +2,12 @@ import mongoose from "mongoose";
 import { Request, Response } from "express";
 
 import paginator from "../../utils/pagination";
-import { addNewPayment, getPaymentById, getPayments, updatePayment, getFullPayment } from "../../db/models/payment/payment.model";
+import { addNewPayment, getPaymentById, getPayments, updatePayment, getFullPayment, changeBillStatus } from "../../db/models/payment/payment.model";
 
 export const httpGetAllPayments = async (req: Request, res: Response) => {
-  const { page, limit } = req.query;
+  const { page, limit, family } = req.query;
   const paginationData = paginator(page, limit);
-  const payment = await getPayments(paginationData);
+  const payment = await getPayments(paginationData, family);
   res.status(200).json(payment);
 };
 
@@ -15,7 +15,6 @@ export const httpGetPaymentById = async (req: Request, res: Response) => {
   const { id } = req.params;
   const isValidId = mongoose.Types.ObjectId.isValid(id);
   if (!isValidId) return res.status(400).json({ error: "Invalid payment ID !" });
-
   const payment = await getPaymentById(id);
   if (payment === null) return res.status(404).json({ error: "Payment not Found !" });
 
@@ -40,4 +39,15 @@ export const httpAddNewPayment = async (req: Request, res: Response) => {
 
 export const httpGetFullPayment = async (req: Request, res: Response) => {
   return res.status(200).json(await getFullPayment());
+};
+
+export const httpPayBill = async (req: Request, res: Response) => {
+  const { id, status } = req.body;
+
+  const isValidId = mongoose.Types.ObjectId.isValid(id);
+  if (!isValidId) return res.status(400).json({ error: "Invalid payment ID !" });
+
+  const dbRes = await changeBillStatus(id, status);
+
+  res.json(dbRes);
 };
