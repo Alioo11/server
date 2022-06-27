@@ -1,14 +1,28 @@
 import mongoose from "mongoose";
 import http from "http";
 import { config } from "dotenv";
-
 import app from "./app";
+import path from "path";
+import { ApolloServerPluginLandingPageGraphQLPlayground, ApolloServerPluginLandingPageDisabled } from "apollo-server-core";
+
+import { ApolloServer } from "apollo-server-express";
+import { loadFilesSync } from "@graphql-tools/load-files";
+import { makeExecutableSchema } from "@graphql-tools/schema";
+
+import resolvers from "./db/models/index.resolver";
+import typeDefs from "./db/models/index.graphql";
+
+// const typesArray = loadFilesSync(path.join(__dirname, "**/*.graphql"));
+// const resolversArray = loadFilesSync(path.join(__dirname, "**/*.resolvers.js"));
+
+const schema = makeExecutableSchema({
+  typeDefs: typeDefs,
+  resolvers: resolvers,
+});
 
 config();
 const PORT = process.env.PORT || 3000;
 const mongo_url = process.env.MONGO_URL || "mongodb://localhost:27017/admin-manager-db-test";
-
-//TODO change the mongo DB defaul options
 
 mongoose
   .connect(mongo_url)
@@ -21,8 +35,25 @@ mongoose
     console.error(err);
   });
 
-const server = http.createServer(app);
+const apollos = new ApolloServer({
+  //schema,
+  typeDefs,
+  resolvers,
+  csrfPrevention: true,
+  cache: "bounded",
+  plugins: [
+    ApolloServerPluginLandingPageGraphQLPlayground({
+      title: "Admin Manager",
+    }),
+    //ApolloServerPluginLandingPageDisabled(),
+  ],
+});
 
-server.listen(PORT, () => {
-  console.log(`server listening on port ${PORT}`);
+apollos.start().then((res) => {
+  console.log(res);
+  apollos.applyMiddleware({ app, path: "/graphql" });
+
+  app.listen(PORT, () => {
+    console.log("Running GraphQL server...");
+  });
 });

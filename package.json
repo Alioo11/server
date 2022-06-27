@@ -7,16 +7,21 @@
     "build": "tsc",
     "start": " node dist/server.js",
     "typescript:watch": "tsc -w ",
-    "nodemon:watch": "nodemon dist/server.js -w",
+    "nodemon:watch": "nodemon dist/src/server.js -w",
     "dev": "concurrently --kill-others \"npm run typescript:watch\" \"npm run nodemon:watch\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "ali salehi",
   "license": "ISC",
   "dependencies": {
+    "@graphql-tools/load-files": "^6.5.4",
+    "@graphql-tools/schema": "^8.3.14",
+    "apollo-server-core": "^3.9.0",
+    "apollo-server-express": "^3.8.2",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
+    "graphql": "^16.5.0",
     "moment": "^2.29.3",
     "mongoose": "^6.3.4"
   },
