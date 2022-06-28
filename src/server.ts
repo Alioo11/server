@@ -3,7 +3,6 @@ import http from "http";
 import { config } from "dotenv";
 import app from "./app";
 import path from "path";
-import { ApolloServerPluginLandingPageGraphQLPlayground, ApolloServerPluginLandingPageDisabled } from "apollo-server-core";
 
 import { ApolloServer } from "apollo-server-express";
 import { loadFilesSync } from "@graphql-tools/load-files";
@@ -36,17 +35,7 @@ mongoose
   });
 
 const apollos = new ApolloServer({
-  //schema,
-  typeDefs,
-  resolvers,
-  csrfPrevention: true,
-  cache: "bounded",
-  plugins: [
-    ApolloServerPluginLandingPageGraphQLPlayground({
-      title: "Admin Manager",
-    }),
-    //ApolloServerPluginLandingPageDisabled(),
-  ],
+  schema,
 });
 
 apollos.start().then((res) => {

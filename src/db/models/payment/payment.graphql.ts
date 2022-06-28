@@ -8,12 +8,12 @@ export default gql`
 
   type Payment {
     _id: ID!
-    description: String!
+    # description: String!
     amount_paid: Float!
     date_from: String!
     date_to: String!
     is_paid: Boolean!
-    family: Family
-    bill: Bill
+    bill: Bill!
+    family: Family!
   }
 `;

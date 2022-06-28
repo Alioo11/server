@@ -9,6 +9,8 @@ import paginator from "../../utils/pagination";
 import { getBills, getBillById, addNewBill, changeBillPaymentStatus, deleteBill } from "../../db/models/bill/bill.model";
 
 import { addNewPayment } from "../../db/models/payment/payment.model";
+import { Payment } from "../../db/interfaces/payment.interface";
+import { familyPushPayment } from "../../db/models/family/family.model";
 
 export const httpGetAllBills = async (req: Request, res: Response) => {
   const { page, limit } = req.query;
@@ -64,10 +66,13 @@ export const httpAddNewBill = async (req: Request, res: Response) => {
     }
   }
 
-  console.log(paymentData);
-  paymentData.forEach(async (item: any) => {
-    await addNewPayment(item);
-  });
+  for (let i = 0; i < paymentData.length; i++) {
+    const formatedPayment = paymentData[i] as Payment;
+    const { _id } = await addNewPayment(formatedPayment);
+    const res = await familyPushPayment(formatedPayment.family, _id);
+  }
+
+  //adding payment Data
 
   if (dbRes) return res.status(200).json(dbRes);
   return res.status(400).json({ error: "something went wrong !" });

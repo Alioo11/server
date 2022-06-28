@@ -2,7 +2,7 @@ import { gql } from "apollo-server-express";
 
 export default gql`
   type Query {
-    familys(limit: Float, skip: Float): [Family]
+    familys(pagination: Pagination, id: Float): [Family]
     family(id: ID!): Family
   }
 
@@ -14,5 +14,6 @@ export default gql`
     absent_days: [String]
     members_count: Float
     house: House
+    payment: [Payment]
   }
 `;

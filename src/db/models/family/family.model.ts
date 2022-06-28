@@ -1,5 +1,6 @@
 import familyMongoose from "./family.mongoose";
 import { Family } from "../../interfaces/family.interface";
+import mongoose from "mongoose";
 
 export const getFamilies = async (paginationData: { skip: number; limit: number }) => {
   return await familyMongoose.find({}).skip(paginationData.skip).limit(paginationData.limit);
@@ -24,4 +25,11 @@ export const updateFamily = async (_id: number, newFamily: Family) => {
     if (err) return err;
     return doc;
   });
+};
+
+export const familyPushPayment = async (_id: String, paymentId?: any) => {
+  const ObjId = new mongoose.mongo.ObjectId(paymentId);
+  const family = await familyMongoose.findById(_id);
+  family.payment.push(ObjId);
+  family.save();
 };
